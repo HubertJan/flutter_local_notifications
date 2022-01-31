@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-
 public class PlayAudio extends Service {
   private static final String LOGCAT = null;
   private RingtoneManager ringtoneManager;
