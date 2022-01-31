@@ -190,6 +190,7 @@ class FlutterLocalNotificationsPlugin {
     String? body,
     NotificationDetails? notificationDetails, {
     String? payload,
+    bool? asForegroundService,
   }) async {
     if (kIsWeb) {
       return;
@@ -199,7 +200,8 @@ class FlutterLocalNotificationsPlugin {
               AndroidFlutterLocalNotificationsPlugin>()
           ?.show(id, title, body,
               notificationDetails: notificationDetails?.android,
-              payload: payload);
+              payload: payload,
+              asForegroundService: asForegroundService);
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       await resolvePlatformSpecificImplementation<
               IOSFlutterLocalNotificationsPlugin>()

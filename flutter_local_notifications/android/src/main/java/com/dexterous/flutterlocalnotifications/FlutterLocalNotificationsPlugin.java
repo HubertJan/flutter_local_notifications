@@ -1,6 +1,7 @@
 package com.dexterous.flutterlocalnotifications;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -1385,6 +1386,8 @@ public class FlutterLocalNotificationsPlugin
         }
     }
 
+
+
     private void pendingNotificationRequests(Result result) {
         ArrayList<NotificationDetails> scheduledNotifications =
                 loadScheduledNotifications(applicationContext);
@@ -1405,6 +1408,7 @@ public class FlutterLocalNotificationsPlugin
         Map<String, Object> arguments = call.arguments();
         Integer id = (Integer) arguments.get(CANCEL_ID);
         String tag = (String) arguments.get(CANCEL_TAG);
+
         cancelNotification(id, tag);
         result.success(null);
     }
@@ -1444,7 +1448,7 @@ public class FlutterLocalNotificationsPlugin
         Map<String, Object> arguments = call.arguments();
         NotificationDetails notificationDetails = extractNotificationDetails(result, arguments);
 
-        if (notificationDetails != null) {
+        if (notificationDetails == null) {
             return;
         }
         if(arguments.get("asForegroundService") != null && (Boolean) arguments.get("asForegroundService") ){
@@ -1605,15 +1609,31 @@ public class FlutterLocalNotificationsPlugin
             notificationManager.cancel(tag, id);
         }
 
-        Intent stopIntent = new Intent(applicationContext, PlayAudio.class);
-        stopIntent.setAction("StopService");
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            applicationContext.startForegroundService(stopIntent);
-        } else {
-            applicationContext.startService(stopIntent);
+        if(isServiceRunningInForeground(applicationContext, PlayAudio.class)){
+            Intent stopIntent = new Intent(applicationContext, PlayAudio.class);
+            stopIntent.setAction("StopService");
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                applicationContext.startForegroundService(stopIntent);
+            } else {
+                applicationContext.startService(stopIntent);
+            }
+
         }
 
         removeNotificationFromCache(applicationContext, id);
+    }
+
+    public static boolean isServiceRunningInForeground(Context context, Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                if (service.foreground) {
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
     private void cancelAllNotifications(Result result) {

@@ -2,6 +2,7 @@ package com.dexterous.flutterlocalnotifications;
 
 import android.app.Notification;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -52,14 +53,16 @@ public class PlayAudio extends Service{
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId){
-        if(intent.getAction().equals("startService")){
-            return this.setupService(intent, flags, startId);
-        }else if(intent.getAction().equals("stopService")){
+        if(intent.getAction().equals("StartService")){
+            return setupService( intent, flags, startId);
+        }else if(intent.getAction().equals("StopService")){
             stopForeground(true);
             stopSelfResult(startId);
         }
         return START_STICKY;
     }
+
+
 
     public void onStop(){
         this.ringtone.stop();
@@ -69,6 +72,7 @@ public class PlayAudio extends Service{
         this.ringtone.stop();
     }
     public void onDestroy(){
+        this.ringtone.stop();
     }
 
     @Override
