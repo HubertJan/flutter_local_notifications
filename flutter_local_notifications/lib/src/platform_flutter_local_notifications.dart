@@ -311,6 +311,7 @@ class AndroidFlutterLocalNotificationsPlugin
     String? body, {
     AndroidNotificationDetails? notificationDetails,
     String? payload,
+    bool? asForegroundService,
   }) {
     validateId(id);
     return _channel.invokeMethod(
@@ -321,6 +322,7 @@ class AndroidFlutterLocalNotificationsPlugin
         'body': body,
         'payload': payload ?? '',
         'platformSpecifics': notificationDetails?.toMap(),
+        'asForegroundService': asForegroundService,
       },
     );
   }
