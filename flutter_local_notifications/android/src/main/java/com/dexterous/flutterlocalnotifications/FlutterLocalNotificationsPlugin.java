@@ -1417,14 +1417,6 @@ public class FlutterLocalNotificationsPlugin
     result.success(null);
   }
 
-  private bool isActive(MethodCall call, Result result) {
-    Map<String, Object> arguments = call.arguments();
-    Integer id = (Integer) arguments.get(CANCEL_ID);
-    String tag = (String) arguments.get(CANCEL_TAG);
-
-    result.success(isNotificationActive(id, tag));
-  }
-
   private void repeat(MethodCall call, Result result) {
     Map<String, Object> arguments = call.arguments();
     NotificationDetails notificationDetails = extractNotificationDetails(result, arguments);
@@ -1608,12 +1600,6 @@ public class FlutterLocalNotificationsPlugin
   private boolean hasInvalidIcon(Result result, String icon) {
     return !StringUtils.isNullOrEmpty(icon)
         && !isValidDrawableResource(applicationContext, icon, result, INVALID_ICON_ERROR_CODE);
-  }
-
-  private boolean isNotificationActive(Integer id, String tag) {
-    Intent intent = new Intent(applicationContext, ScheduledNotificationReceiver.class);
-    return PendingIntent.getBroadcast(applicationContext, id, intent, PendingIntent.FLAG_NO_CREATE)
-        != null;
   }
 
   private void cancelNotification(Integer id, String tag) {
