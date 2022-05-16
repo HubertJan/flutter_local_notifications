@@ -1105,7 +1105,7 @@ public class FlutterLocalNotificationsPlugin
 
   static void showServiceNotification(Context context, NotificationDetails notificationDetails) {
     Notification notification = createNotification(context, notificationDetails);
-    if(notificationDetails.playSound){
+    if (notificationDetails.playSound) {
       Intent startIntent = new Intent(context, PlayAudio.class);
       startIntent.putExtra("notification", notification);
       startIntent.putExtra("id", notificationDetails.id);
@@ -1610,10 +1610,10 @@ public class FlutterLocalNotificationsPlugin
         && !isValidDrawableResource(applicationContext, icon, result, INVALID_ICON_ERROR_CODE);
   }
 
-  private boolean isNotificationActive(Integer id, String tag)
-  {
+  private boolean isNotificationActive(Integer id, String tag) {
     Intent intent = new Intent(applicationContext, ScheduledNotificationReceiver.class);
-    return PendingIntent.getBroadcast(applicationContext, id, intent, PendingIntent.FLAG_NO_CREATE) != null;
+    return PendingIntent.getBroadcast(applicationContext, id, intent, PendingIntent.FLAG_NO_CREATE)
+        != null;
   }
 
   private void cancelNotification(Integer id, String tag) {

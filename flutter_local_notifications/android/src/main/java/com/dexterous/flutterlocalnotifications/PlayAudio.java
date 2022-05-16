@@ -36,17 +36,18 @@ public class PlayAudio extends Service {
       notification = (Notification) extras.get("notification");
       id = (int) extras.get("id");
       String ringtoneString = (String) extras.get("ringtoneUri");
-      if(ringtoneString == null){
+      if (ringtoneString == null) {
         Uri ringtoneUri = Uri.parse(ringtoneString);
         this.ringtone = this.ringtoneManager.getRingtone(this, ringtoneUri);
-      }else{
-        this.ringtone = ringtoneManager.getRingtone(
-                        this, ringtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM));
+      } else {
+        this.ringtone =
+            ringtoneManager.getRingtone(
+                this,
+                ringtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM));
       }
     }
 
     this.startForeground(id, notification);
-
 
     this.ringtone.setStreamType(AudioManager.STREAM_ALARM);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
