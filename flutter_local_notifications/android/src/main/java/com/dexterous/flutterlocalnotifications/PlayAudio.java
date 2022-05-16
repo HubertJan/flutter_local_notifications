@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -35,13 +36,19 @@ public class PlayAudio extends Service {
     } else {
       notification = (Notification) extras.get("notification");
       id = (int) extras.get("id");
+      String ringtoneString = (String) extras.get("ringtoneUri");
+      if(ringtoneString == null){
+        Uri ringtoneUri = Uri.parse(ringtoneString);
+        this.ringtone = this.ringtoneManager.getRingtone(this, ringtoneUri);
+      }else{
+        this.ringtone = ringtoneManager.getRingtone(
+                        this, ringtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM));
+      }
     }
 
     this.startForeground(id, notification);
 
-    this.ringtone =
-        ringtoneManager.getRingtone(
-            this, ringtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM));
+
     this.ringtone.setStreamType(AudioManager.STREAM_ALARM);
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
       this.ringtone.setLooping(true);
