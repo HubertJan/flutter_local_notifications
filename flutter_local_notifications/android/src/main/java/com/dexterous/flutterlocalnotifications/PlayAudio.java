@@ -10,17 +10,13 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
 
 public class PlayAudio extends Service {
-  private static final String LOGCAT = null;
   private RingtoneManager ringtoneManager;
   private Ringtone ringtone;
 
   @Override
   public void onCreate() {
-    Log.d("myTag", "Hell World");
-    super.onCreate();
     this.ringtoneManager = new RingtoneManager(this);
     this.ringtoneManager.setStopPreviousRingtone(true);
   }
@@ -29,14 +25,13 @@ public class PlayAudio extends Service {
     Notification notification;
     int id;
     Bundle extras = intent.getExtras();
-
     if (extras == null) {
       throw new Error("");
     } else {
       notification = (Notification) extras.get("notification");
       id = (int) extras.get("id");
       String ringtoneString = (String) extras.get("ringtoneUri");
-      if (ringtoneString == null) {
+      if (ringtoneString != null) {
         Uri ringtoneUri = Uri.parse(ringtoneString);
         this.ringtone = this.ringtoneManager.getRingtone(this, ringtoneUri);
       } else {
